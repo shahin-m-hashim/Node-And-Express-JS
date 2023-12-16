@@ -1,0 +1,52 @@
+When working with modules in the backend it's important to remember the type of js files
+
+There are two main types - 
+1. CommonJS (Node.js Older) - 
+    `module.exports` - 
+        module is a special object that is available in all js files in the Node.js application by default.
+    `require` - 
+        require is a function that is used to include modules in the Node.js application.
+        we can use require to import functions, objects or primitives exported from another module(js file).
+        require returns the exported module content from that file.
+
+2. Modules (ES6 and Newer) - `export` and `import`
+
+    In modern backend development with Node.js, using ES6 modules (the import and export syntax) is 
+    generally recommended for several reasons. Here's why:
+
+    Consistency Across Frontend and Backend:
+        Using ES6 modules in the backend provides a consistent module system between frontend and 
+        backend development. This can simplify code organization and make it easier for developers 
+        to switch between different parts of a project.
+
+    Standardization:
+        ES6 modules are part of the ECMAScript standard, making them a standardized and widely adopted
+        module system. This standardization facilitates better interoperability between different tools 
+        and environments.
+
+    Tree Shaking:
+        ES6 modules support tree shaking, a process that eliminates unused code during the build process.
+        This can result in smaller bundle sizes, especially when working with modern build tools.
+
+    Static Analysis:
+        ES6 modules support static analysis, making it easier for tools to analyze and optimize code. 
+        This can lead to better performance and more efficient code.
+
+    Modern JavaScript Practices:
+        As the JavaScript ecosystem evolves, adopting modern practices, including ES6 modules, is a 
+        a good way to stay current with industry standards and best practices.
+
+
+To use ES6 modules in Node.js
+1. run npm init -y to create the package.json file
+2. add "type": "module" to the package.json file
+3. By default type is set to commonjs
+
+When using common js we use require and module.exports
+1. suppose let's say theres two files index.js and sum.js
+2. in sum.js we have a function called sum this fn simply takes 2 numbers and prints the sum
+3. in this file only we can call the sum fn, so to use this fn in index.js we need to export it
+4. to do that we use the module.exports = sum;
+5. In index.js we can use the sum fn using require() at the top level like const sum = require('./sum.js');
+6. Now in the index we can call this sum fn multiple times as we need
+7. to get a quick peek into the module object simply console.log(module)
