@@ -1,0 +1,9 @@
+A Framework is a piece of code that dictates the architecture of our project.
+it cannot be seamlessly integrated into an existing project. Instead, it can be used
+to provide the boilerplate/template to build a new project.
+The framework is in control of the code and we have to follow the rules of the framework.
+The framework calls the code that we write. 
+Framework contains a collection of libraries.
+
+Eg: Angular JS is a framework that we can use to build user interfaces. It contains reusable functions
+and components that we can use in our code. But it also dictates the architecture of our project.

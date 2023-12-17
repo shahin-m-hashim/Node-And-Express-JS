@@ -1,0 +1,40 @@
+npm comes preinstalled with node js and is used to install packages.
+
+npm --v, npm --version - checks npm version
+
+'npm init' will walk you through creating a package.json file.
+'npm init -y' will use the default options and create a package.json file with default values.
+
+package installation:
+
+'npm i <packageName>' - installs packages locally for the current project
+'npm install -g <packageName>' - installs packages globally for the current user
+
+package.json - contains all the information about the project and the packages used in the project.
+it's important to have this file in the project folder. It can be created manually or simply
+by running the 'npm init' command.
+
+It will have a 'dependencies' object that contains all the packages used in the project. eg: bootstrap
+'devDependencies' object that contains all the packages used in the project only for development purposes.
+eg: nodeMon - a package that restarts the server automatically when changes are made to the project.
+
+when adding dev dependencies either add flag -D or --save-dev to the npm install command.
+
+package-lock.json - contains all the information about the packages installed in the project. It's
+important to have this file in the project folder. Some packages depend on other packages, for eg
+bootstrap depends on jquery. So when installing Bootstrap, jQuery will also be installed. if the version
+of jQuery changes then it will lead to bugs in the project. So the package-lock.json file contains the
+version and details of those packages dependent by packages in package.json.
+
+Same as package.json another important folder is node_modules. This folder contains all the packages
+installed for the project. It's important to have this folder in the project folder and not mess around
+with it. It's also important to add this folder to the .gitignore file so it won't be pushed to the 
+repository.
+
+NPM lets us either use packages created by other devs or create our own packages and publish them to npm.
+
+Also since the repo won't have the node_modules folder, when cloning the repo, we can run 'npm install'
+so that every package used in the project will be installed with the help of the package.json file.
+
+Uninstall packages:
+npm uninstall <packageName> - uninstalls the package from the project

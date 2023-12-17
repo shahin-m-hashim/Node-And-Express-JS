@@ -1,0 +1,20 @@
+https://www.npmjs.com/
+
+NPM is the package manager for JavaScript and the world’s largest software registry. 
+Discover packages of reusable code — and assemble them in powerful new ways.
+
+When we need to create something we have 2 options
+1. create everything from scratch
+2. use something that already exists 
+
+For eg: suppose we need a slider for our website, either we can create it from scratch 
+or we could simply use a package that already contains the code/js files to do so
+
+NPM is a package manager that helps us to install packages and use them in our project.
+
+A package is a collection of code or folders that someone else has written and published to the NPM registry.
+
+A dependency is a package that our project depends on. it can be a package that we have installed directly 
+or a package that is required by another package that we have installed. 
+
+Dev dependencies are packages that are only needed during development.

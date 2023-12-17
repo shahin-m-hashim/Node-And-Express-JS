@@ -1,0 +1,9 @@
+A library is a collection of pre-written code that can perform specific tasks without having to write
+it ourselves from scratch. 
+
+It's a set of reusable functions that we can use in our code.
+You are in full control of the code and you can use as much or as little of it as you want.
+You can call the libraries that provide the functions you need in your code anywhere you want.
+
+For eg: React is a library that we can use to build user interfaces. It contains reusable functions
+and components that we can use in our code.
