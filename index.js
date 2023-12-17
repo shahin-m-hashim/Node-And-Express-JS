@@ -1,4 +1,4 @@
-import fs, { read } from 'fs';
+import fs, { WriteStream } from 'fs';
 
 // streams - a sequence of data moved from one place to another over time
 // streams are used to read or write input or output sequences of data
@@ -11,21 +11,18 @@ import fs, { read } from 'fs';
 // transform - can modify the data as its being read and written. 
 // Eg: compression , write compressed data and read from decompressed data
 
-const readableStream = fs.createReadStream('./file1.txt', { encoding: 'utf-8', highWaterMark: 5 });
-
-// streams extend from the event emitter class
-// readableStream emit an event we can can listen to
-
-readableStream.on('data', chunk => console.log("Stream of data read from file1.txt: ", chunk));
+const readableStream = fs.createReadStream('./file1.txt', 'utf-8');
 
 const writableStream = fs.createWriteStream('./file2.txt');
-readableStream.on('data', chunk => console.log("Data wrote to file2.txt", writableStream.write(chunk)));
 
-// the reason the entire file content of file1.txt is written to file2.txt is because
-// the buffers used by streams have a default size of 64kb and the file1.txt is less than 64kb
-// the file1.txt has 14 characters so the size is 14 bytes which is way less than 64kb
-// so to set a limit to the size of the buffer we can use the highWaterMark option
+// Pipes - used to read data from a readable stream and write it to a writable stream
+// in a much more easier and readable way rather than manually listening to data events 
+// and writing to a writable stream
 
-// in real life we read mostly large data's more than 64kb (mb and gb)
-// so its really important to set the highWaterMark option to a reasonable size
-// so that we don't run out of memory when reading large files and also to improve performance
+readableStream.pipe(writableStream);
+
+// transform streams
+import zlib from 'zlib';
+const gzip = zlib.createGzip();
+
+readableStream.pipe(gzip).pipe(fs.WriteStream('./file3.txt.gz'));
