@@ -4,18 +4,65 @@ import fs from 'fs';
 const port = 3000;
 const hostname = '127.0.0.1';
 
+const homePage = fs.readFileSync('./pages/home.html');
+const aboutPage = fs.readFileSync('./pages/about.html');
+const contactPage = fs.readFileSync('./pages/contact.html');
+
+// when it comes to real life we send files directly by copying the
+// contents as string and sending that as a response via proper routing.
+
+/*
+    Routing and hyperlinks serve different purposes in the context of web development, and 
+    understanding their respective roles can provide insight into why both are necessary.
+
+    Hyperlinks: Hyperlinks, or simply links, are elements within web pages that allow users to 
+    navigate between different resources on the internet. They are used to connect various web pages, 
+    documents, or sections within a single document. When a user clicks on a hyperlink, the browser 
+    sends a request to the server for the linked resource, and the server responds by providing 
+    the content to the user's browser.
+
+    Navigation: Hyperlinks facilitate navigation within a website or between different websites. 
+    They allow users to move from one piece of content to another without the need for an intermediary step.
+
+    Discoverability: Hyperlinks enable users and search engines to discover and access various web resources. 
+    They form the backbone of the interconnected nature of the web, making it possible to explore and 
+    access a wide array of content.
+
+    Routing: Routing, on the other hand, is a mechanism used in web development to determine how incoming
+    HTTP requests are handled by the server. It serves as a way to map specific URLs to the corresponding 
+    code that processes and responds to those requests.
+
+    URL Resolution: Routing is essential for mapping specific URLs to the appropriate server-side code or 
+    resources. It enables the server to understand which piece of code or which resource is meant to 
+    handle a particular URL.
+
+    Dynamic Content: Routing allows developers to create applications with dynamic content and user 
+    interactions. For example, in single-page applications (SPAs), routing is used to manage the display 
+    of different components based on the URL, without requiring a full page refresh.
+
+    SEO and Permalinks: Routing helps in creating search-engine-friendly URLs and enables the implementation 
+    of permalinks, which are stable and consistent URLs for specific content. This is crucial for search 
+    engine optimization (SEO) and user experience.
+
+    RESTful Services: In the context of APIs, routing plays a key role in defining the endpoints and handling 
+    requests for data retrieval, manipulation, and other interactions.
+
+    Parameter Handling: Routing also allows for the handling of parameters within URLs, which is important 
+    for passing data or instructions between the client and server.
+
+*/
+
 const server = http.createServer((req, res) => {
-    // req is an IncomingMessage object which contains the request data and provides a response stream
-    // res is a ServerResponse object which provides methods for sending data to the client
-    // we can see the url (current path of the request) by req.url
-    // this helps us with http routing. we simply check the url and send the appropriate response
 
     if (req.url === '/') {
         res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end('<h1>Home Page</h1>');
+        res.end(homePage);
     } else if (req.url === '/about') {
         res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end('<h1>About Page</h1>');
+        res.end(aboutPage);
+    } else if (req.url === '/contact') {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(contactPage);
     }
     else {
         res.writeHead(404, { 'Content-Type': 'text/html' });
