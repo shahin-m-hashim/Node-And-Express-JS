@@ -4,52 +4,17 @@ import fs from 'fs';
 const port = 3000;
 const hostname = '127.0.0.1';
 
-const homePage = fs.readFileSync('./pages/home.html');
-const aboutPage = fs.readFileSync('./pages/about.html');
-const contactPage = fs.readFileSync('./pages/contact.html');
-
-// when it comes to real life we send files directly by copying the
-// contents as string and sending that as a response via proper routing.
+const homePage = fs.readFileSync('./page/index.html');
+const style = fs.readFileSync('./page/styles.css');
+const svg = fs.readFileSync('./page/logo.svg');
+const jsLogic = fs.readFileSync('./page/browser-app.js');
 
 /*
-    Routing and hyperlinks serve different purposes in the context of web development, and 
-    understanding their respective roles can provide insight into why both are necessary.
-
-    Hyperlinks: Hyperlinks, or simply links, are elements within web pages that allow users to 
-    navigate between different resources on the internet. They are used to connect various web pages, 
-    documents, or sections within a single document. When a user clicks on a hyperlink, the browser 
-    sends a request to the server for the linked resource, and the server responds by providing 
-    the content to the user's browser.
-
-    Navigation: Hyperlinks facilitate navigation within a website or between different websites. 
-    They allow users to move from one piece of content to another without the need for an intermediary step.
-
-    Discoverability: Hyperlinks enable users and search engines to discover and access various web resources. 
-    They form the backbone of the interconnected nature of the web, making it possible to explore and 
-    access a wide array of content.
-
-    Routing: Routing, on the other hand, is a mechanism used in web development to determine how incoming
-    HTTP requests are handled by the server. It serves as a way to map specific URLs to the corresponding 
-    code that processes and responds to those requests.
-
-    URL Resolution: Routing is essential for mapping specific URLs to the appropriate server-side code or 
-    resources. It enables the server to understand which piece of code or which resource is meant to 
-    handle a particular URL.
-
-    Dynamic Content: Routing allows developers to create applications with dynamic content and user 
-    interactions. For example, in single-page applications (SPAs), routing is used to manage the display 
-    of different components based on the URL, without requiring a full page refresh.
-
-    SEO and Permalinks: Routing helps in creating search-engine-friendly URLs and enables the implementation 
-    of permalinks, which are stable and consistent URLs for specific content. This is crucial for search 
-    engine optimization (SEO) and user experience.
-
-    RESTful Services: In the context of APIs, routing plays a key role in defining the endpoints and handling 
-    requests for data retrieval, manipulation, and other interactions.
-
-    Parameter Handling: Routing also allows for the handling of parameters within URLs, which is important 
-    for passing data or instructions between the client and server.
-
+    The problem with this method to read and process html files is that it will only handle one file
+    at a time. If we have a lot of different files, we will have to write a lot of code to handle each 
+    file. Suppose our html file has a lot of css and js files, we will have to write a lot of code to
+    handle each file for the server to receive all of those along with the html file, which is not 
+    efficient and unreadable. This is where express.js comes in handy.
 */
 
 const server = http.createServer((req, res) => {
@@ -57,12 +22,18 @@ const server = http.createServer((req, res) => {
     if (req.url === '/') {
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(homePage);
-    } else if (req.url === '/about') {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(aboutPage);
-    } else if (req.url === '/contact') {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(contactPage);
+    }
+    else if (req.url === '/styles.css') {
+        res.writeHead(200, { 'Content-Type': 'text/css' });
+        res.end(style);
+    }
+    else if (req.url === '/logo.svg') {
+        res.writeHead(200, { 'Content-Type': 'image/svg+xml' });
+        res.end(svg);
+    }
+    else if (req.url === '/browser-app.js') {
+        res.writeHead(200, { 'Content-Type': 'text/javascript' });
+        res.end(jsLogic);
     }
     else {
         res.writeHead(404, { 'Content-Type': 'text/html' });
