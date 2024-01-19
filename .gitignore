@@ -1,0 +1,39 @@
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed*.pid.lock
+
+# Test coverage
+coverage
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslint
+
+# Optional yarn cache directory
+.yarn
+
+# Environment variables
+.env
+
+# Mac OS files
+.DS_Store
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# generated files
+ehthumbs.db
+Thumbs.db
