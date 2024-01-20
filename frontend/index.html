@@ -61,12 +61,21 @@
 <body>
     <div class="container">
         <h1>Client Side</h1>
-        <h3>Simply fetch data from server</h3>
-        <button onclick="
-            fetch('http://localhost:5500/users/1')
-            .then(response => response.json())
-            .then(data =>console.log('Success: ', data))
-            .catch(error =>console.error('Error fetching data:', error));">Fetch Some Data</button>
+        <h3>Post data to server</h3>
+        <hr><br>
+        <form action="/login" method="get">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Login</button>
+            </div>
+        </form>
     </div>
 </body>
 
