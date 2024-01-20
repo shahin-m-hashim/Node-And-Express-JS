@@ -1,0 +1,57 @@
+To connect the front end of a website to the back end of a website, things to consider
+
+*   No matter if the domain, IP address, or port is unique and different for both the front end and 
+    back end, the browser will think that they are of the same origin, and the browser will not allow 
+    the front end to send requests to the back end.
+
+    eg: front end is running on localhost:3000, back end is running on localhost:5000
+
+    This is because the browser will only look at the domain name, and not the port number.
+    So, when u send a request u will probably come across the following error 
+
+    Access to fetch at 'http://127.0.0.1:3000/users' from origin 'http://127.0.0.1:5500'
+    has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the 
+    requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' 
+    to fetch the resource with CORS disabled.
+
+CORS and why it is needed
+
+*   CORS stands for Cross-Origin Resource Sharing
+*   CORS is a mechanism that uses additional HTTP headers to tell browsers to give a web application 
+    running at one origin, access to selected resources from a different origin. A web application 
+    executes a cross-origin HTTP request when it requests a resource that has a different origin 
+    (domain, protocol, or port) from its own.
+*   CORS is needed because of the same origin policy. The same-origin policy is a critical security
+    mechanism that restricts how a document or script loaded from one origin can interact with a 
+    resource from another origin. It helps isolate potentially malicious documents, reducing possible 
+    attack vectors.
+
+
+In real-world scenarios where the front-end and back-end components of an application are hosted on 
+different servers with separate IP addresses and ports, you will still need to address CORS-related issues. 
+The same-origin policy and CORS restrictions are enforced by web browsers regardless of whether the servers 
+hosting the front-end and back-end components have different IP addresses and ports. This helps protect 
+users from cross-site request forgery (CSRF) attacks and unauthorized data access.
+
+
+to enable cors in express, we need to install the cors package using npm install cors 
+then add below code the server.js file
+
+const cors = require('cors');
+app.use(cors()); - // Enable all CORS requests
+
+not recommended for production, but for development, we can use the above code to enable cors
+for production, we need to specify the origin and the methods that are allowed to be used
+in the cors() function.
+
+// Define the CORS options
+const corsOptions = {
+  origin: 'http://127.0.0.1:3000', 
+  // This is very sensitive, we need to specify the exact URL, not a trailing / to the end or localhost
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+// Enable CORS with custom options
+app.use(cors(corsOptions));
+
+in front end - fetch('http://localhost:5500/users')
