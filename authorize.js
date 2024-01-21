@@ -1,5 +1,5 @@
 const check = (req, res, next) => {
-    console.log('Check middleware');
+    console.log('Authorize middleware');
     next();
 }
 
