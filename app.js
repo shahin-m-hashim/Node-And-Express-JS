@@ -31,23 +31,21 @@ const users = [
     }
 ];
 
-app.put('/update/user/:id', (req, res) => {
+app.delete('/delete/user/:id', (req, res) => {
     const { id } = req.params;
-    const { name } = req.query;
-    // console.log(req.query);
-    const user = users.find(user => user.id === parseInt(id));
+    const userIndex = users.findIndex(user => user.id === parseInt(id));
 
-    if (user) {
-        user.name = name || user.name;
+    if (userIndex !== -1) {
+        users.splice(userIndex, 1);
         res.status(200).json({
             success: true,
-            message: `User with id ${id} updated successfully`,
+            message: `User with id ${id} deleted successfully`,
             data: users
         });
     } else {
         res.status(404).json({
             success: false,
-            message: `User with id ${id} doesn't exist`,
+            message: `User with id ${id} does not exist`,
             data: users
         });
     }
