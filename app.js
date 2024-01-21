@@ -8,22 +8,20 @@ const app = express();
 
 const PORT = 3000;
 
-app.get('/', (req, res) => {
-    res.send('Welcome to Express & Node JS Backend Server');
-});
-
 // req => middleware => res 
 
-app.use([logger, authorize]);
-// to use multiple middleware's use array. order matters here, first logger is executed then authorize. 
+app.use(logger);
 
-app.get('/about', (req, res) => res.send('About Page'));
+app.get('/', (req, res) => res.send('Welcome to Express & Node JS Backend Server'));
 
-app.get('/contact', (req, res) => res.send('Contact Page'));
+app.use('/user', authorize);
+// this will run the authorize middleware for all the routes that starts with /user
+// Middleware is very powerful since now we can authorize users for specific routes
+// and enhance the security of the application.
 
-app.get('/profile', (req, res) => res.send('Profile Page'));
-
-app.get('/login', (req, res) => res.send('Login Page'));
+app.get('/user/login', (req, res) => res.send('Login Page'));
+app.get('/user/contact', (req, res) => res.send('Contact Page'));
+app.get('/user/profile', (req, res) => res.send('Profile Page'));
 
 
 // this handles invalid routes
