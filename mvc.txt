@@ -1,0 +1,2 @@
+Model View Controller Architecture -
+https://medium.com/@ipenywis/what-is-the-mvc-creating-a-node-js-express-mvc-application-da10625a4eda
