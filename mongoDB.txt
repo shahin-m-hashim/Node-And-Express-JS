@@ -1,0 +1,28 @@
+MongoDB Hierarchy
+
+Cluster: At the highest level, a cluster in MongoDB includes one or more MongoDB instances that 
+work together, typically to store and manage your data. This group of MongoDB instances is managed 
+by a single mongod or a replica set (multiple mongod instances form a self-healing, distributed 
+system where data is replicated across multiple servers). A cluster can be hosted locally or 
+in a cloud-based environment. mongod is the primary daemon process for the MongoDB system
+
+Databases: Within a MongoDB cluster, you can have multiple databases. Each database acts as a separate 
+unit for data storage and management. You can switch between databases using the use <database_name> 
+command. If the database doesn't exist, MongoDB will create it for you. Make sure to add at least
+one collection for the DB to show up in the list of databases.
+
+Collections: Inside each database, you can create collections. A collection is a group of MongoDB 
+documents. It's the equivalent of a table in a relational database. Collections do not enforce a schema, 
+so documents within a single collection can have different fields.
+
+Documents: Documents are individual records stored in a collection. Each document is a set of 
+key-value pairs, also known as fields and values. This is similar to a row in a relational database.
+
+So, the hierarchy in MongoDB is Cluster > Databases > Collections > Documents.
+
+The main relations in the db are as follows:
+https://www.mongodb.com/docs/manual/data-modeling/concepts/embedding-vs-references/#std-label-data-modeling-embedding
+
+1. one to one - one document in a collection is related to one document in another collection
+2. one to many - one document in a collection is related to many documents in another collection
+3. many to many - many documents in a collection are related to many documents in another collection
