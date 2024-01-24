@@ -1,32 +1,35 @@
 // Require MongoDB language driver
-const { MongoClient } = require("mongodb")
+const { MongoClient } = require("mongodb");
 
-// Set the value of uri to your Atlas connection string.
-const uri = " add your connection string here "
+// Set uri of connection string.
+const uri = "mongodb://127.0.0.1:27017"
 
-// Create the MongoClient instance
-const client = new MongoClient(uri)
+// Create the MongoClient instance, this connects to a cluster or standalone server
+const client = new MongoClient(uri);
 
-// note - You need only one `MongoClient` instance per Atlas cluster for your application. 
-// Having more than one `MongoClient` instance for a single Atlas cluster in your application
-// will increase costs and negatively impact the performance of your database.
+// Database Name
+const dbName = "students";
 
-// Establishes a connection to the database using the MongoClient instance
-const main = async () => {
+console.log('Connecting to the database...');
+
+async function connectToDatabase() {
     try {
-        await client.connect()
-        console.log("Connected to MongoDB Atlas!")
-        // list out all the databases in the cluster
-        const dbs = await client.db().admin().listDatabases()
-        console.table(dbs.databases)
-    } catch (error) {
-        console.error(error.message)
+        // Connect to the MongoDB server
+        await client.connect();
+
+        console.log('Connected to the database');
+
+        // Access your database
+        const database = client.db(dbName);
+
+        console.log('Database:', database);
+
+    } catch (err) {
+        console.error('Connection Error Occurred:', err.message);
     } finally {
-        await client.close()
+        // Ensure that the client will close when you finish
+        await client.close();
     }
 }
 
-// Run the  function, catch any errors and finally close the connection when the main function is done
-main()
-    .catch(err => console.log(err.message))
-    .finally(() => client.close())
+connectToDatabase();
