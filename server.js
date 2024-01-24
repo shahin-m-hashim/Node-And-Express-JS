@@ -29,16 +29,15 @@ async function Run() {
         // so use - https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#find
         // https://www.mongodb.com/docs/drivers/node/current/
 
-        console.log('Deleting documents in the collection...');
+        console.log('Counting documents in the collection...');
 
-        const filter = { name: "Ajmal" };
+        const filter = { profession: 'student' };
 
-        let result = await collection.deleteOne(filter);
+        let totalCount = await collection.countDocuments();
+        let professionCount = await collection.countDocuments(filter);
+        let estimatedCount = await collection.estimatedDocumentCount();
 
-        // let result = await collection.deleteMany(filter);
-
-        // Print the number of matching and modified documents
-        console.log(`Status: ${result.acknowledged},\nDeleted Count: ${result.deletedCount}`);
+        console.log(`Total Count: ${totalCount}\nProfession Count: ${professionCount}\nEstimated Count: ${estimatedCount}`);
     } catch (err) {
         console.error('Connection Error Occurred:', err.message);
     } finally {
