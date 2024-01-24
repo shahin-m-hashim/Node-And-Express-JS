@@ -31,12 +31,14 @@ async function Run() {
 
         console.log('Updating documents in the collection...');
 
-        const filter = {};
+        const filter = { name: "Akhil" };
 
         // Specify the update to set a value for the plot field
         const update = {
             $set: {
-                profession: "student"
+                "major": "Robotics",
+                "profession": "Part Time",
+                "hobby": "Reading"
             }
         };
 
@@ -46,7 +48,7 @@ async function Run() {
         let result = await collection.updateMany(filter, update, options);
 
         // Print the number of matching and modified documents
-        console.log(`Status: ${result.acknowledged},\nMatched Count: ${result.matchedCount},\nModified Count: ${result.modifiedCount},\nUpserted Document Id: ${result.upsertedId},\nUpserted Count: ${result.upsertedId}`);
+        console.log(`Status: ${result.acknowledged},\nMatched Count: ${result.matchedCount},\nModified Count: ${result.modifiedCount},\nUpserted Document Id: ${result.upsertedId},\nUpserted Count: ${result.upsertedCount}`);
     } catch (err) {
         console.error('Connection Error Occurred:', err.message);
     } finally {
