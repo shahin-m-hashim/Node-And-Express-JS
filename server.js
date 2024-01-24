@@ -29,26 +29,16 @@ async function Run() {
         // so use - https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#find
         // https://www.mongodb.com/docs/drivers/node/current/
 
-        console.log('Updating documents in the collection...');
+        console.log('Deleting documents in the collection...');
 
-        const filter = { name: "Akhil" };
+        const filter = { name: "Ajmal" };
 
-        // Specify the update to set a value for the plot field
-        const update = {
-            $set: {
-                "major": "Robotics",
-                "profession": "Part Time",
-                "hobby": "Reading"
-            }
-        };
+        let result = await collection.deleteOne(filter);
 
-        /* Set the upsert option to insert a document if no documents match the filter */
-        const options = { upsert: true };
-
-        let result = await collection.updateMany(filter, update, options);
+        // let result = await collection.deleteMany(filter);
 
         // Print the number of matching and modified documents
-        console.log(`Status: ${result.acknowledged},\nMatched Count: ${result.matchedCount},\nModified Count: ${result.modifiedCount},\nUpserted Document Id: ${result.upsertedId},\nUpserted Count: ${result.upsertedCount}`);
+        console.log(`Status: ${result.acknowledged},\nDeleted Count: ${result.deletedCount}`);
     } catch (err) {
         console.error('Connection Error Occurred:', err.message);
     } finally {
