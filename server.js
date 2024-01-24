@@ -31,22 +31,19 @@ async function Run() {
 
         console.log('Updating documents in the collection...');
 
-        const filter = { _id: new ObjectId("65b0aeafbcb6f3794ef21569") };
+        const filter = {};
 
         // Specify the update to set a value for the plot field
         const update = {
             $set: {
-                year: 2020
-            },
-            $unset: {
-                age: ""
+                profession: "student"
             }
         };
 
         /* Set the upsert option to insert a document if no documents match the filter */
         const options = { upsert: true };
 
-        let result = await collection.updateOne(filter, update, options);
+        let result = await collection.updateMany(filter, update, options);
 
         // Print the number of matching and modified documents
         console.log(`Status: ${result.acknowledged},\nMatched Count: ${result.matchedCount},\nModified Count: ${result.modifiedCount},\nUpserted Document Id: ${result.upsertedId},\nUpserted Count: ${result.upsertedId}`);
