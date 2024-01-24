@@ -1,5 +1,5 @@
 // Require MongoDB language driver
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient, ObjectId, Collection } = require("mongodb");
 require('dotenv').config();
 
 // Set uri of connection string.
@@ -23,21 +23,22 @@ async function Run() {
         console.log('Connected to the database');
 
         // Access your database and your collection
-        const collection = client.db(dbName).collection('cse');
+        const database = client.db(dbName);
 
         // node.js driver and mongo-shell are different, have similar syntax but not exactly the same.
         // so use - https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#find
         // https://www.mongodb.com/docs/drivers/node/current/
 
-        console.log('Counting documents in the collection...');
+        console.log('Creating collections in the database...');
 
-        const filter = { profession: 'student' };
+        // Create a collection
+        let result = await database.createCollection("test");
+        console.log(result.collectionName, 'has been created in the database', result.dbName);
 
-        let totalCount = await collection.countDocuments();
-        let professionCount = await collection.countDocuments(filter);
-        let estimatedCount = await collection.estimatedDocumentCount();
+        // Drop a collection
+        // result = await database.dropCollection("test");
+        // console.log("Collection test has been dropped from the database:", result);
 
-        console.log(`Total Count: ${totalCount}\nProfession Count: ${professionCount}\nEstimated Count: ${estimatedCount}`);
     } catch (err) {
         console.error('Connection Error Occurred:', err.message);
     } finally {
