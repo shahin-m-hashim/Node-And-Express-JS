@@ -22,48 +22,20 @@ async function Run() {
 
         console.log('Connected to the database');
 
-        // Access your database
-        const database = client.db(dbName);
+        // Access your database and your collection
+        const collection = client.db(dbName).collection('cse');
 
-        // Access your collection
-        const collection = database.collection('cse');
+        console.log('Retrieving documents from the collection...');
 
-        // single line collection syntax
-        // const collection = client.db(dbName).collection('cse');
+        // Use toArray method to convert find query result to an array
+        let docs = await collection.find().toArray();
 
-        const document = { name: 'John Doe', major: 'Computer Science', year: 2023 };
+        // Log the retrieved documents
+        // console.log("Collection of documents: ", docs);
+        docs.forEach(doc => console.log(doc)); // Print each document to the console
 
-        const multipleDocuments = [
-            {
-                name: 'Sam Daniel',
-                age: 30,
-                profession: 'Engineer'
-            },
-            {
-                name: 'Jane Smith',
-                age: 28,
-                profession: 'Designer'
-            },
-            {
-                name: 'Alex Johnson',
-                age: 35,
-                profession: 'Manager'
-            }
-        ]
-
-        // console.log('Database:', database);
-        // console.log('Collection:', collection);
-
-        const insertOneStatus = await collection.insertOne(document);
-        console.log(`Document inserted with the _id: ${insertOneStatus.insertedId}`);
-
-        const insertManyStatus = await collection.insertMany(multipleDocuments);
-        console.log(`${insertManyStatus.insertedCount} documents were inserted`);
-
-        /*
-            It's quite straightforward to use the MongoDB Node.js driver to perform operations 
-            such as insertOne, insertMany, find, and more.
-        */
+        // const count = await collection.countDocuments(); OR
+        console.log(`Documents found: ${docs.length}`);
 
     } catch (err) {
         console.error('Connection Error Occurred:', err.message);
