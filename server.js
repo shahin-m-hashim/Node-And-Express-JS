@@ -1,5 +1,5 @@
 // Require MongoDB language driver
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 require('dotenv').config();
 
 // Set uri of connection string.
@@ -25,26 +25,31 @@ async function Run() {
         // Access your database and your collection
         const collection = client.db(dbName).collection('cse');
 
-        console.log('Filtering documents from the collection...');
-
-        const query = { name: "John Doe" };
-        const projection = { _id: 0, name: 1 };
-
         // node.js driver and mongo-shell are different, have similar syntax but not exactly the same.
         // so use - https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#find
         // https://www.mongodb.com/docs/drivers/node/current/
 
-        // Use toArray method to convert find query result to an array
+        console.log('Updating documents in the collection...');
 
-        // let docs = await collection.find(query, { projection }).toArray();
-        // or collection.find(query).project(projection).sort(sort).limit(2).toArray();
+        const filter = { _id: new ObjectId("65b0aeafbcb6f3794ef21569") };
 
-        let docs = await collection.find({}, { projection, sort: { name: 1 }, limit: 3 }).toArray();
+        // Specify the update to set a value for the plot field
+        const update = {
+            $set: {
+                year: 2020
+            },
+            $unset: {
+                age: ""
+            }
+        };
 
-        // Print each document to the console
-        docs.forEach(doc => console.log(doc));
-        console.log(`No of documents found: ${docs.length}`);
+        /* Set the upsert option to insert a document if no documents match the filter */
+        const options = { upsert: true };
 
+        let result = await collection.updateOne(filter, update, options);
+
+        // Print the number of matching and modified documents
+        console.log(`Status: ${result.acknowledged},\nMatched Count: ${result.matchedCount},\nModified Count: ${result.modifiedCount},\nUpserted Document Id: ${result.upsertedId},\nUpserted Count: ${result.upsertedId}`);
     } catch (err) {
         console.error('Connection Error Occurred:', err.message);
     } finally {
