@@ -25,17 +25,25 @@ async function Run() {
         // Access your database and your collection
         const collection = client.db(dbName).collection('cse');
 
-        console.log('Retrieving documents from the collection...');
+        console.log('Filtering documents from the collection...');
+
+        const query = { name: "John Doe" };
+        const projection = { _id: 0, name: 1 };
+
+        // node.js driver and mongo-shell are different, have similar syntax but not exactly the same.
+        // so use - https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#find
+        // https://www.mongodb.com/docs/drivers/node/current/
 
         // Use toArray method to convert find query result to an array
-        let docs = await collection.find().toArray();
 
-        // Log the retrieved documents
-        // console.log("Collection of documents: ", docs);
-        docs.forEach(doc => console.log(doc)); // Print each document to the console
+        // let docs = await collection.find(query, { projection }).toArray();
+        // or collection.find(query).project(projection).sort(sort).limit(2).toArray();
 
-        // const count = await collection.countDocuments(); OR
-        console.log(`Documents found: ${docs.length}`);
+        let docs = await collection.find({}, { projection, sort: { name: 1 }, limit: 3 }).toArray();
+
+        // Print each document to the console
+        docs.forEach(doc => console.log(doc));
+        console.log(`No of documents found: ${docs.length}`);
 
     } catch (err) {
         console.error('Connection Error Occurred:', err.message);
