@@ -1,77 +1,99 @@
-// Require MongoDB language driver
 const { MongoClient } = require("mongodb");
-require('dotenv').config();
+require("dotenv").config();
 
-// Set uri of connection string.
 const uri = process.env.MONGODB_URI;
-
-// process.env will look for the .env file and load the variables into the environment
-
-// Create the MongoClient instance, this connects to a cluster or standalone server
 const client = new MongoClient(uri);
 
-console.log('Connecting to the server or cluster...');
 
-// node.js driver and mongo-shell are different, have similar syntax but not exactly the same.
-// so use - https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#find
-// https://www.mongodb.com/docs/drivers/node/current/
-
-async function Run() {
+async function main() {
     try {
         // Connect to the MongoDB cluster or server
         await client.connect();
+        console.log('Connected to the server or cluster');
 
-        // Access your database and your collection
-        const database = client.db("students");
-        const collection = database.collection("grades");
+        // Get the collections
+        const accounts = client.db("Bank").collection("accounts");
+        const transfers = client.db("Bank").collection("transfers");
 
-        console.log('Connected to the database:', database.databaseName);
+        // Account Information
+        const transactionAmount = 150;
+        const accountIDSender = "MDB574189300";
+        const accountIDReceiver = "MDB343652528";
 
-        const result = await collection.bulkWrite([
-            { insertOne: { document: { name: "John", grade: 80, subject: "English" } } },
-            { insertOne: { document: { name: "Susan", grade: 65, subject: "Math" } } },
-            { insertOne: { document: { name: "Mike", grade: 90, subject: "Science" } } },
-            { insertOne: { document: { name: "Jane", grade: 10, subject: "History" } } },
-            { insertOne: { document: { name: "Haifa", grade: 70, subject: "Science" } } },
-            { insertOne: { document: { name: "Suhana", grade: 60, subject: "Science" } } },
-            { insertOne: { document: { name: "Sumina", grade: 85, subject: "Biology" } } },
-            { insertOne: { document: { name: "Ajmal", grade: 10, subject: "History" } } },
-            {
-                updateOne: {
-                    filter: { name: "Sulthana" },
-                    update: { $set: { grade: 100, subject: "Economics" } },
-                    upsert: true
-                }
-            },
-            {
-                updateMany: {
-                    filter: { subject: { $in: ["English", "Science"] } },
-                    update: {
-                        $set: {
-                            GPA: 3.5
-                        }
-                    }
-                }
-            }, {
-                updateMany: {
-                    filter: { grade: { $lt: 20 } },
-                    update: { $set: { grade: 55 } }
-                }
-            },
-            { deleteOne: { filter: { name: "Haifa" } } },
-            { deleteMany: { filter: { grade: { $lt: 20 } } } }
-        ],
-            {
-                ordered: true, // default is true meaning the operations will be executed in order
+        const transferDoc = {
+            from: accountIDSender,
+            to: accountIDReceiver,
+            amount: transactionAmount,
+            timestamp: new Date()
+        }
+
+        // Start a session with the connected client
+        const session = client.startSession();
+
+        // Start a transaction for the session
+        const transfer = async () => {
+            try {
+                const transactionResult = await session.withTransaction(async () => {
+
+                    // Step 1: Update the sender account balance
+                    const senderResult = await accounts.updateOne(
+                        { account_id: accountIDSender },
+                        { $inc: { balance: -transactionAmount } },
+                        { upsert: true, session }
+                    );
+                    console.log(`${transactionAmount} Rs debited from sender ${accountIDSender}: ${senderResult.acknowledged}`);
+
+                    // Step 2: Update the receiver account balance
+                    const receiverResult = await accounts.updateOne(
+                        { account_id: accountIDReceiver },
+                        { $inc: { balance: transactionAmount } },
+                        { upsert: true, session }
+                    );
+                    console.log(`${transactionAmount} Rs credited to receiver ${accountIDReceiver}: ${receiverResult.acknowledged}`);
+
+                    // Step 3: Insert the transfer document
+                    const transferResult = await transfers.insertOne(transferDoc, { session });
+                    console.log(`Transfer record inserted with id: ${transferResult.insertedId}`);
+
+                    // Step 4: Update the transfers complete for the sender
+                    const updateSenderTransferResults = await accounts.updateOne(
+                        { account_id: accountIDSender },
+                        { $push: { transfers_complete: transferResult.insertedId } },
+                        { upsert: true, session }
+                    );
+                    console.log(`Added transaction ${transferResult.insertedId} to senders account: ${updateSenderTransferResults.acknowledged}`);
+
+                    // Step 5: Update the transfers complete for the receiver
+                    const updateReceiverTransferResults = await accounts.updateOne(
+                        { account_id: accountIDReceiver },
+                        { $push: { transfers_complete: transferResult.insertedId } },
+                        { upsert: true, session }
+                    );
+                    console.log(`Added transaction ${transferResult.insertedId} to receivers account: ${updateReceiverTransferResults.acknowledged}`);
+                });
+
+                console.log("Committing the transaction");
+
+                // Step 6: Check the transaction result
+                transactionResult // shit doesn't work in this terminal fsr 
+                    ? console.log('Transaction completed successfully')
+                    : console.log('Transaction aborted intentionally');
+            } catch (err) {
+                console.error('Transfer aborted:', err.message);
+                process.exit(1);
+            } finally {
+                await session.endSession();
             }
-        )
+        };
 
-        console.log('Result:', result);
+        await transfer();
     } catch (err) {
-        console.error('Error Occurred:', err.message);
-    } finally {
+        console.error('Connection Error Occurred:', err.message);
+    }
+    finally {
         await client.close();
+        console.log('Connection Closed');
     }
 }
 
-Run();
+main();
