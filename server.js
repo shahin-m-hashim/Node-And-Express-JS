@@ -21,32 +21,55 @@ async function Run() {
         // Connect to the MongoDB cluster or server
         await client.connect();
 
-        // Database Name
-        const dbName = "test";
-
         // Access your database and your collection
-        const database = client.db(dbName);
+        const database = client.db("students");
+        const collection = database.collection("grades");
 
-        console.log('Connected to the database', database.databaseName);
-        // console.log("Database stats:", await database.stats());
-        const collections = await database.listCollections().toArray();
-        collections.length > 0 ?
-            console.log("Collections in the database:", collections.map(collection => collection.name)) :
-            console.log("No collections in the database");
+        console.log('Connected to the database:', database.databaseName);
 
-        // create a collection
-        let result = await database.createCollection('collectionTest');
-        console.log("Created a collection: ", result.collectionName);
+        const result = await collection.bulkWrite([
+            { insertOne: { document: { name: "John", grade: 80, subject: "English" } } },
+            { insertOne: { document: { name: "Susan", grade: 65, subject: "Math" } } },
+            { insertOne: { document: { name: "Mike", grade: 90, subject: "Science" } } },
+            { insertOne: { document: { name: "Jane", grade: 10, subject: "History" } } },
+            { insertOne: { document: { name: "Haifa", grade: 70, subject: "Science" } } },
+            { insertOne: { document: { name: "Suhana", grade: 60, subject: "Science" } } },
+            { insertOne: { document: { name: "Sumina", grade: 85, subject: "Biology" } } },
+            { insertOne: { document: { name: "Ajmal", grade: 10, subject: "History" } } },
+            {
+                updateOne: {
+                    filter: { name: "Sulthana" },
+                    update: { $set: { grade: 100, subject: "Economics" } },
+                    upsert: true
+                }
+            },
+            {
+                updateMany: {
+                    filter: { subject: { $in: ["English", "Science"] } },
+                    update: {
+                        $set: {
+                            GPA: 3.5
+                        }
+                    }
+                }
+            }, {
+                updateMany: {
+                    filter: { grade: { $lt: 20 } },
+                    update: { $set: { grade: 55 } }
+                }
+            },
+            { deleteOne: { filter: { name: "Haifa" } } },
+            { deleteMany: { filter: { grade: { $lt: 20 } } } }
+        ],
+            {
+                ordered: true, // default is true meaning the operations will be executed in order
+            }
+        )
 
-
-        // drop the database
-        result = await database.dropDatabase();
-        console.log("Dropped the database: ", result);
-
+        console.log('Result:', result);
     } catch (err) {
-        console.error('Connection Error Occurred:', err.message);
+        console.error('Error Occurred:', err.message);
     } finally {
-        // Ensure that the client will close when you finish
         await client.close();
     }
 }
