@@ -1,0 +1,56 @@
+Mongoose is a popular MongoDB object modeling tool designed to work in an asynchronous environment, 
+particularly with Node.js. It provides a straightforward, schema-based solution for modeling data, 
+applying validation, and building queries to interact with MongoDB. 
+
+Here's why Mongoose is important:
+
+Schema Definition: Mongoose allows you to define data schemas for your MongoDB collections, 
+providing a structured representation of the data model. This ensures that the data adheres to 
+a specific structure, helping to maintain consistency and integrity.
+
+Data Validation: By defining schemas, Mongoose enables you to enforce data validation rules, such 
+as required fields, data types, and custom validators. This helps in preventing incorrect data from 
+being inserted into the database.
+
+Middleware Support: Mongoose supports middleware functions that allow you to define hooks for 
+asynchronous operations, such as pre-processing or post-processing of data before or after certain 
+events (e.g., save, update, remove).
+
+Query Building: It provides a rich set of methods for building and executing queries, making 
+interactions with the database more intuitive and efficient. Mongoose simplifies tasks such as 
+finding, updating, and deleting documents from MongoDB collections.
+
+Data Modeling: Mongoose supports data modeling features such as defining relationships between 
+different collections, embedding documents, and referencing other documents, which is crucial when 
+working with complex data relationships.
+
+Promises and Async/Await Support: Mongoose supports Promises and Async/Await, making it easy to 
+manage asynchronous operations when working with data retrieval and manipulation.
+
+
+Things to remember:
+
+schema - defines the structure of the document, default values, validators, etc., whereas
+model - 
+    provides an interface to the database for creating, querying, updating, deleting records, etc.
+    they can be considered as our collections in the database
+query - 
+    used to query the database for records and returns a Query object which can be used to chain
+    more conditions and execute the query
+document - 
+    a representation of a single record in the database, which can be saved and retrieved from
+    the database
+collection - 
+    a container for documents, which can be used to save, retrieve, update, and delete records
+    from the database
+
+Important mongoose methods:
+
+Model.create() - 
+    creates a new document and saves it to the database
+
+Model.save() -
+    saves changes of the document to the database    
+
+Model.find() -
+    finds all documents that match the specified query criteria
